@@ -12,7 +12,7 @@ pss-model-comparison/
 ├── data/                # Raw and processed
 │ ├── raw/ # Submitted model outputs
 │ └── processed/ # Harmonized and cleaned data
-├── analysis/            
+├── R/                   # functions for data processing and vizualisation
 ├── scripts/             # Data processing and analysis scripts
 ├── results/             # Output files, figures, and tables
 ├── LICENSE 
@@ -21,13 +21,15 @@ pss-model-comparison/
 
 ## 🛠️ Installation
 
-- Prerequisites are R (>= XX)
+- Prerequisites are R (>= 4.4.3)
 1. Open project in Rstudio
 2. Restore R environment using `renv`
 ```r
 install.packages("renv")
 renv::restore()
 ```
+3. Download data from the [One Drive data repository](https://1sfu-my.sharepoint.com/:f:/r/personal/mia29_sfu_ca/Documents/pss_model_comparison_data?csf=1&web=1&e=jOAY5K) (ask Mike Irvine for access)
+4. Copy data into the folder [data/raw/](./data/raw/)
 
 ## 👥 Contributors
 
