@@ -228,3 +228,7 @@ rsconnect/
 ### R.Bookdown Stack ###
 # R package: bookdown caching files
 /*_files/
+
+# do not include raw data and intermediate data output
+data/raw/
+data/processed/
