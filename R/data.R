@@ -47,6 +47,7 @@ load_data <- function(){
   all_data <- bcrom_data |>
     dplyr::bind_rows(otem_data)
   all_data <- all_data |>
-    dplyr::mutate(date = lubridate::ymd(glue::glue("{year}-{month}-01")))
+    dplyr::mutate(date = lubridate::ymd(glue::glue("{year}-{month}-01")),
+                  year_quarter = lubridate::quarter(date, with_year = T))
   return(all_data)
 }

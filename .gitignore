@@ -232,3 +232,4 @@ rsconnect/
 # do not include raw data and intermediate data output
 data/raw/
 data/processed/
+
