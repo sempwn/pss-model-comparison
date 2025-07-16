@@ -16,10 +16,6 @@
 #' @return A grouped and summarized tibble with one row per combination of `year_quarter`, `model`, and `run`.
 #'   All non-Date columns are summed. `year_quarter` is returned as a factor.
 #'
-#' @importFrom dplyr filter group_by summarise across
-#' @importFrom tidyselect where
-#' @importFrom lubridate ymd is.Date
-#' @importFrom forcats as_factor
 #' @export
 #'
 #' @examples
@@ -30,8 +26,18 @@ calculate_year_quarter_data <- function(model_data){
   date <- year_quarter <- model <- run <- NULL
   model_data |>
     dplyr::filter(date > lubridate::ymd("2020-03-01")) |>
-    dplyr::group_by(year_quarter,model,run) |>
+    dplyr::group_by(year_quarter, model, run) |>
     dplyr::summarise(dplyr::across(
       tidyselect::where(~ !lubridate::is.Date(.x)),sum)) |>
     dplyr::mutate(year_quarter = forcats::as_factor(year_quarter))
+}
+
+#' calculate deaths and overdoses averted
+#' @inheritParams calculate_year_quarter_data
+#' @return tibble
+#' @export
+add_averted_columns <- function(model_data){
+  model_data |>
+    dplyr::mutate(`deaths averted` = `no PSS drug_deaths` - `PSS drug_deaths`,
+                  `overdoses averted` = `no PSS overdoses` - `PSS overdoses`)
 }

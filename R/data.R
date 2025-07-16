@@ -1,10 +1,11 @@
 #' Load and Combine BCROM and OTEM Model Output Data
 #'
+#' @description
 #' This function reads in CSV files containing output from the BCROM and OTEM models,
 #' processes and combines the data into a single tibble. It adds a `model` column
 #' to distinguish the data sources and constructs a `date` column from the `year` and
 #' `month` columns.
-#'
+#' @param round character, either "one" or "two"
 #' @return A tibble containing the combined data from the BCROM and OTEM models, with
 #' an added `model` column and a parsed `date` column.
 #'
@@ -33,9 +34,11 @@
 #' }
 #'
 #' @export
-load_data <- function(){
-  bcrom_data_file <- here::here("data","raw","BCROM_comparison_outputs.csv")
-  otem_data_file <- here::here("data","raw","OTEM_comparison_outputs.csv")
+load_data <- function(round="one"){
+  bcrom_data_file <- here::here("data","raw",paste0("round_",round),
+                                "BCROM_comparison_outputs.csv")
+  otem_data_file <- here::here("data","raw",paste0("round_",round),
+                               "OTEM_comparison_outputs.csv")
   bcrom_data <- readr::read_csv(bcrom_data_file)
   otem_data <- readr::read_csv(otem_data_file)
 
@@ -48,6 +51,6 @@ load_data <- function(){
     dplyr::bind_rows(otem_data)
   all_data <- all_data |>
     dplyr::mutate(date = lubridate::ymd(glue::glue("{year}-{month}-01")),
-                  year_quarter = lubridate::quarter(date, with_year = T))
+                  year_quarter = lubridate::quarter(date, type = "year_start/end"))
   return(all_data)
 }
