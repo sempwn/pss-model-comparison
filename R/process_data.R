@@ -37,7 +37,12 @@ calculate_year_quarter_data <- function(model_data){
 #' @return tibble
 #' @export
 add_averted_columns <- function(model_data){
+  model <- run <- `deaths averted` <- `overdoses averted` <- NULL
+  `no PSS drug_deaths` <- `PSS drug_deaths` <- `no PSS overdoses` <- `PSS overdoses` <- NULL
   model_data |>
-    dplyr::mutate(`deaths averted` = `no PSS drug_deaths` - `PSS drug_deaths`,
-                  `overdoses averted` = `no PSS overdoses` - `PSS overdoses`)
+    dplyr::group_by(model,run) |>
+    dplyr::mutate(
+      `cumulative deaths averted` = cumsum(`no PSS drug_deaths` - `PSS drug_deaths`),
+      `cumulative overdoses averted` = cumsum(`no PSS overdoses` - `PSS overdoses`)
+      )
 }

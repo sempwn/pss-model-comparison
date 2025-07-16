@@ -8,7 +8,7 @@ outcomes <- c(
   "no PSS drug_deaths", "PSS overdoses",
   "deaths averted", "overdoses averted")
 
-model_data <- load_data()
+model_data <- load_data(round = "two")
 
 # outcomes by quarter
 plot_data <- calculate_year_quarter_data(model_data) |>
@@ -16,6 +16,6 @@ plot_data <- calculate_year_quarter_data(model_data) |>
 for(outcome in outcomes){
   g <- plot_outcome_by_quarter(plot_data,outcome = outcome)
   show(g)
-  ggsave(here("results","round_one",
+  ggsave(here("results","round_two",
               glue::glue("{outcome} model quarter comparison.png")))
 }
