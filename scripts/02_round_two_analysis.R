@@ -6,7 +6,7 @@ library(pss.model.comparison)
 outcomes <- c(
   "PSS drug_deaths", "no PSS overdoses",
   "no PSS drug_deaths", "PSS overdoses",
-  "deaths averted", "overdoses averted")
+  "cumulative deaths averted", "cumulative overdoses averted")
 
 model_data <- load_data(round = "two")
 
