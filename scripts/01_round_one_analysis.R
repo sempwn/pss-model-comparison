@@ -18,5 +18,7 @@ for(outcome in outcomes){
   show(g)
   ggsave(here("results","round_one",
               glue::glue("{outcome} model quarter comparison.png")))
+  ggsave(here("results","round_one",
+              glue::glue("{outcome} model quarter comparison.pdf")))
 }
 
