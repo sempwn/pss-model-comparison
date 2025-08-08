@@ -19,3 +19,6 @@ for(outcome in outcomes){
   ggsave(here("results","round_two",
               glue::glue("{outcome} model quarter comparison.png")))
 }
+
+print("Total deaths averted by model: ")
+summarise_deaths_averted(model_data)
