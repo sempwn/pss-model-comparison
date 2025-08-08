@@ -21,11 +21,7 @@
 #'   \item A `date` column is constructed by combining `year` and `month` with a dummy day `"01"`.
 #' }
 #'
-#' @importFrom readr read_csv
-#' @importFrom dplyr mutate select bind_rows
-#' @importFrom lubridate ymd
 #' @importFrom here here
-#' @importFrom glue glue
 #'
 #' @examples
 #' \dontrun{
@@ -35,9 +31,9 @@
 #'
 #' @export
 load_data <- function(round="one"){
-  bcrom_data_file <- here::here("data","raw",paste0("round_",round),
+  bcrom_data_file <- here("data","raw",paste0("round_",round),
                                 "BCROM_comparison_outputs.csv")
-  otem_data_file <- here::here("data","raw",paste0("round_",round),
+  otem_data_file <- here("data","raw",paste0("round_",round),
                                "OTEM_comparison_outputs.csv")
   bcrom_data <- readr::read_csv(bcrom_data_file)
   otem_data <- readr::read_csv(otem_data_file)

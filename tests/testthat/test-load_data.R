@@ -30,30 +30,30 @@ test_that("load_data reads, combines, and processes BCROM and OTEM files", {
 
     # Override here::here() to use tempdir path
     mock_here <- function(...) file.path(getwd(), ...)
-    with_mocked_bindings(
-      `here::here` = mock_here,
-      {
-        result <- load_data(round = "one")
+    local_mocked_bindings(here = mock_here)
 
-        # Check combined data has expected rows and columns
-        expect_s3_class(result, "tbl_df")
-        expect_equal(nrow(result), 4)
-        expect_true("model" %in% names(result))
-        expect_true("date" %in% names(result))
-        expect_true("year_quarter" %in% names(result))
+    result <- load_data(round = "one")
 
-        # Check model assignment
-        expect_equal(sum(result$model == "bcrom"), 2)
-        expect_equal(sum(result$model == "otem"), 2)
 
-        # Check that "...1" was removed
-        expect_false("...1" %in% names(result))
+    # Check combined data has expected rows and columns
+    expect_s3_class(result, "tbl_df")
+    expect_equal(nrow(result), 4)
+    expect_true("model" %in% names(result))
+    expect_true("date" %in% names(result))
+    expect_true("year_quarter" %in% names(result))
 
-        # Check correct date construction
-        expected_dates <- ymd(c("2020-01-01", "2021-04-01", "2020-01-01", "2021-04-01"))
-        expect_equal(sort(result$date), sort(expected_dates))
-      }
-    )
+    # Check model assignment
+    expect_equal(sum(result$model == "bcrom"), 2)
+    expect_equal(sum(result$model == "otem"), 2)
+
+    # Check that "...1" was removed
+    expect_false("...1" %in% names(result))
+
+    # Check correct date construction
+    expected_dates <- ymd(c("2020-01-01", "2021-04-01", "2020-01-01", "2021-04-01"))
+    expect_equal(sort(result$date), sort(expected_dates))
+
+
   })
 })
 
@@ -66,11 +66,7 @@ test_that("load_data errors when files are missing", {
               "data/raw/round_one/BCROM_comparison_outputs.csv")
 
     mock_here <- function(...) file.path(getwd(), ...)
-    with_mock(
-      `here::here` = mock_here,
-      {
-        expect_error(load_data(round = "one"))
-      }
-    )
+    local_mocked_bindings(here = mock_here)
+    expect_error(load_data(round = "one"))
   })
 })
