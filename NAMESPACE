@@ -2,8 +2,11 @@
 
 export(add_averted_columns)
 export(calculate_year_quarter_data)
+export(create_odd_labels)
 export(load_data)
 export(plot_outcome_by_quarter)
+export(process_twsa_data)
+export(twsa_heatmap_plot)
 importFrom(dplyr,bind_rows)
 importFrom(dplyr,mutate)
 importFrom(dplyr,select)
