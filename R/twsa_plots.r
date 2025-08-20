@@ -54,7 +54,7 @@ twsa_heatmap_plot <- function(data, fill_var, x_labels, y_labels, x_title,
       limits = limits,
       breaks = breaks,
       labels = c("Favours PSS", "Scenarios equal", "Favours counterfactual"),
-      guide = guide_colourbar(
+      guide = ggplot2::guide_colourbar(
         direction = "horizontal",
         title = NULL
       )
@@ -66,13 +66,13 @@ twsa_heatmap_plot <- function(data, fill_var, x_labels, y_labels, x_title,
     ggplot2::scale_y_continuous(breaks = normalized_breaks, labels = y_labels) +
     ggplot2::labs(x = x_title, y = y_title) +
     ggplot2::theme(
-      axis.title.x = element_text(size = 8, hjust = 0.5),
-      axis.title.y = element_text(size = 8, hjust = 0.5),
-      axis.text = element_text(size = 7, color = "black"),
+      axis.title.x = ggplot2::element_text(size = 8, hjust = 0.5),
+      axis.title.y = ggplot2::element_text(size = 8, hjust = 0.5),
+      axis.text = ggplot2::element_text(size = 7, color = "black"),
       plot.margin = grid::unit(c(0, 0.35, 0, 0.35), "cm"),
       legend.position = "bottom",
       legend.key.width = grid::unit(1.5, "cm"),
-      legend.text = element_text(size = 8)
+      legend.text = ggplot2::element_text(size = 8)
     ) +
     ggplot2::coord_fixed()
 
@@ -112,6 +112,7 @@ twsa_heatmap_plot <- function(data, fill_var, x_labels, y_labels, x_title,
 #'
 #' @export
 process_twsa_data <- function(data_obj) {
+  n_inc_odf_scaled <- n_inc_odn_scaled <- NULL
   # Generate 17x17 grid coordinates from -1 to 1 (required to produce a square grid)
   x_coords <- seq(-1, 1, length.out = 17)
   y_coords <- seq(-1, 1, length.out = 17)
@@ -119,14 +120,14 @@ process_twsa_data <- function(data_obj) {
   grid <- expand.grid(x_scale = x_coords, y_scale = y_coords)
   temp_data <- cbind(grid, data_obj)
 
-  temp_data %>%
+  temp_data |>
     dplyr::select(
       "x_scale", "y_scale", "n_inc_odf_scaled",
       "n_inc_odn_scaled"
-    ) %>%
+    ) |>
     dplyr::mutate(
       incremental_overdoses_scaled = n_inc_odf_scaled + n_inc_odn_scaled
-    ) %>%
+    ) |>
     dplyr::as_tibble()
 }
 

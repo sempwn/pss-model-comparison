@@ -2,11 +2,14 @@ Package: pss.model.comparison
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+    person("Mike", "Irvine", , "mike.irvine@bccdc.ca", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+License: GPL-2 + file LICENSE
 Suggests: 
-    testthat (>= 3.0.0)
+    rlang,
+    testthat (>= 3.0.0),
+    tibble,
+    withr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,6 +22,7 @@ Imports:
     here,
     lubridate,
     readr,
+    stats,
     stringr,
     tidyselect
 URL: https://sempwn.github.io/pss-model-comparison/

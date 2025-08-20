@@ -31,6 +31,7 @@
 #'
 #' @export
 load_data <- function(round="one"){
+  `...1` <- NULL
   bcrom_data_file <- here("data","raw",paste0("round_",round),
                                 "BCROM_comparison_outputs.csv")
   otem_data_file <- here("data","raw",paste0("round_",round),

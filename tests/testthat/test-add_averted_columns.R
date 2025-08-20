@@ -1,7 +1,8 @@
 library(dplyr)
+library(tibble)
 
 test_that("add_averted_columns computes cumulative averted columns", {
-  input <- tibble::tibble(
+  input <- tibble(
     model = c("A", "A", "A", "B", "B"),
     run = c(1, 1, 1, 2, 2),
     `no PSS drug_deaths` = c(10, 20, 30, 5, 10),
@@ -25,7 +26,7 @@ test_that("add_averted_columns computes cumulative averted columns", {
 })
 
 test_that("add_averted_columns preserves original structure", {
-  input <- tibble::tibble(
+  input <- tibble(
     model = c("X", "X"),
     run = c(1, 1),
     `no PSS drug_deaths` = c(10, 20),

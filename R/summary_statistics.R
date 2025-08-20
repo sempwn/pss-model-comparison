@@ -17,13 +17,16 @@ prettify_uncertainty <- function(m,lc,uc, digits=2){
 #' @return [dplyr::tibble()]
 #' @export
 summarise_deaths_averted <- function(model_data, digits = 2){
+  m <- lc <- uc <- NULL
+  `no PSS drug_deaths` <- `PSS drug_deaths` <- deaths_averted <- run <- NULL
+  model <- run <- NULL
   model_data |>
-    mutate(deaths_averted = `no PSS drug_deaths` - `PSS drug_deaths`) |>
-    group_by(model,run) |>
-    summarise(deaths_averted = sum(deaths_averted)) |>
-    group_by(model) |>
-    summarise(m = median(deaths_averted),
-              lc = quantile(deaths_averted,0.025),
-              uc = quantile(deaths_averted, 0.975)) |>
-    mutate(deaths_averted = prettify_uncertainty(m,lc,uc))
+    dplyr::mutate(deaths_averted = `no PSS drug_deaths` - `PSS drug_deaths`) |>
+    dplyr::group_by(model,run) |>
+    dplyr::summarise(deaths_averted = sum(deaths_averted)) |>
+    dplyr::group_by(model) |>
+    dplyr::summarise(m = stats::median(deaths_averted),
+              lc = stats::quantile(deaths_averted,0.025),
+              uc = stats::quantile(deaths_averted, 0.975)) |>
+    dplyr::mutate(deaths_averted = prettify_uncertainty(m,lc,uc))
 }

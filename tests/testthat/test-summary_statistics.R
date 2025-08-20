@@ -11,7 +11,7 @@ test_that("prettify_uncertainty outputs correctly formatted string", {
 })
 
 test_that("summarise_deaths_averted returns formatted output with median and quantiles", {
-  input <- tibble::tibble(
+  input <- tibble(
     model = c("A", "A", "A", "B", "B"),
     run = c(1, 2, 3, 1, 2),
     `no PSS drug_deaths` = c(100, 110, 120, 80, 90),
@@ -33,7 +33,7 @@ test_that("summarise_deaths_averted returns formatted output with median and qua
 })
 
 test_that("summarise_deaths_averted works with different digits", {
-  input <- tibble::tibble(
+  input <- tibble(
     model = rep("Z", 3),
     run = 1:3,
     `no PSS drug_deaths` = c(200.0235, 210, 220),

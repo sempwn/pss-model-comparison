@@ -5,7 +5,7 @@ library(forcats)
 
 test_that("calculate_year_quarter_data filters and groups correctly", {
   # Create dummy input data
-  input <- tibble::tibble(
+  input <- tibble(
     date = as.Date(c("2020-02-01", "2020-04-01", "2020-04-15", "2021-01-10")),
     year_quarter = c("2020 Q1", "2020 Q2", "2020 Q2", "2021 Q1"),
     model = c("A", "A", "A", "B"),
@@ -35,7 +35,7 @@ test_that("calculate_year_quarter_data filters and groups correctly", {
 })
 
 test_that("calculate_year_quarter_data handles no rows after filter", {
-  input <- tibble::tibble(
+  input <- tibble(
     date = as.Date(c("2020-01-01", "2020-02-01")),
     year_quarter = c("2020 Q1", "2020 Q1"),
     model = c("A", "A"),

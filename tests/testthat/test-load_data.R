@@ -12,7 +12,7 @@ test_that("load_data reads, combines, and processes BCROM and OTEM files", {
     dir.create("data/raw/round_one", recursive = TRUE)
 
     # Create mock BCROM CSV file
-    bcrom_mock <- tibble::tibble(
+    bcrom_mock <- tibble(
       `...1` = 1:2,
       year = c(2020, 2021),
       month = c(1, 4),
@@ -21,7 +21,7 @@ test_that("load_data reads, combines, and processes BCROM and OTEM files", {
     write_csv(bcrom_mock, "data/raw/round_one/BCROM_comparison_outputs.csv")
 
     # Create mock OTEM CSV file
-    otem_mock <- tibble::tibble(
+    otem_mock <- tibble(
       year = c(2020, 2021),
       month = c(1, 4),
       value_otem = c(30, 40)
