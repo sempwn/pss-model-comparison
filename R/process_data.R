@@ -46,3 +46,38 @@ add_averted_columns <- function(model_data){
       `cumulative overdoses averted` = cumsum(`no PSS overdoses` - `PSS overdoses`)
       )
 }
+
+#' Scale a column between -1 and 1 and rename it
+#'
+#' This function rescales the values of a specified numeric column in a data frame
+#' to the range \[-1, 1\] and saves the result in a new column with the given name.
+#'
+#' @param dataframe A data frame containing the column to be rescaled.
+#' @param col A string giving the name of the column to rescale.
+#' @param new_col A string giving the name of the new column to store the rescaled values.
+#'
+#' @return A data frame with the new rescaled column added.
+#' @examples
+#' df <- data.frame(x = 1:10)
+#' scale_and_rename_columns(df, "x", "x_scaled")
+#'
+#' @noRd
+scale_and_rename_columns <- function(dataframe, col, new_col) {
+  if (!col %in% names(dataframe)) {
+    stop("Column '", col, "' not found in dataframe.")
+  }
+  if (!is.numeric(dataframe[[col]])) {
+    stop("Column '", col, "' must be numeric.")
+  }
+
+  x <- dataframe[[col]]
+  rng <- range(x, na.rm = TRUE)
+  if (rng[1] == rng[2]) {
+    warning("Column '", col, "' has constant values. Returning zeros.")
+    dataframe[[new_col]] <- 0
+  } else {
+    dataframe[[new_col]] <- 2 * (x - rng[1]) / (rng[2] - rng[1]) - 1
+  }
+
+  return(dataframe)
+}
