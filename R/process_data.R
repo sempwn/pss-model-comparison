@@ -55,6 +55,7 @@ add_averted_columns <- function(model_data){
 #' @param dataframe A data frame containing the column to be rescaled.
 #' @param col A string giving the name of the column to rescale.
 #' @param new_col A string giving the name of the new column to store the rescaled values.
+#' @param digits number of digits for re-scaled data to round to, default is 3
 #'
 #' @return A data frame with the new rescaled column added.
 #' @examples
@@ -62,7 +63,7 @@ add_averted_columns <- function(model_data){
 #' scale_and_rename_columns(df, "x", "x_scaled")
 #'
 #' @noRd
-scale_and_rename_columns <- function(dataframe, col, new_col) {
+scale_and_rename_columns <- function(dataframe, col, new_col, digits = 3) {
   if (!col %in% names(dataframe)) {
     stop("Column '", col, "' not found in dataframe.")
   }
@@ -76,7 +77,7 @@ scale_and_rename_columns <- function(dataframe, col, new_col) {
     warning("Column '", col, "' has constant values. Returning zeros.")
     dataframe[[new_col]] <- 0
   } else {
-    dataframe[[new_col]] <- 2 * (x - rng[1]) / (rng[2] - rng[1]) - 1
+    dataframe[[new_col]] <- round(2 * (x - rng[1]) / (rng[2] - rng[1]) - 1, digits=digits)
   }
 
   return(dataframe)

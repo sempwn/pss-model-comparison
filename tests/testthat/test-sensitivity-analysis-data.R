@@ -34,14 +34,15 @@ test_that("load_sensitivity_analysis_data returns expected structure", {
   result <- load_sensitivity_analysis_data()
 
   expect_type(result, "list")
-  expect_named(result, "pop_mort")
-
-  scenario <- result$pop_mort
-  expect_named(scenario, c("data","x_label","y_label"))
-  expect_s3_class(scenario$data, "tbl_df")
-  expect_true(all(c("x_scale","y_scale","total_deaths","model") %in% names(scenario$data)))
-  expect_type(scenario$x_label, "character")
-  expect_type(scenario$y_label, "character")
+  expect_named(result,c("pop_mort","oat_ret"))
+  for(s in names(result)){
+    scenario <- result[[s]]
+    expect_named(scenario, c("data","x_label","y_label"))
+    expect_s3_class(scenario$data, "tbl_df")
+    expect_true(all(c("x_scale","y_scale","total_deaths","model") %in% names(scenario$data)))
+    expect_type(scenario$x_label, "character")
+    expect_type(scenario$y_label, "character")
+  }
 })
 
 test_that("load_bcrom_sensitivity_analysis_data scales and renames columns", {
