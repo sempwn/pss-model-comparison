@@ -92,7 +92,9 @@ load_sensitivity_analysis_data <- function(){
     combined_data[[d]] <- list(
       data = combine_sensitivity_data(otem_data[[d]],bcrom_data[[d]]),
       x_label = labels[[d]][['x']],
-      y_label = labels[[d]][['y']]
+      y_label = labels[[d]][['y']],
+      x_tick_labels = labels[[d]][['x_tick_labels']],
+      y_tick_labels = labels[[d]][['y_tick_labels']]
     )
   }
 
@@ -141,11 +143,15 @@ get_sensitivity_data_labels <- function(){
   list(
     "pop_mort" = list(
       "x" = "Incident OUD cases resulting from PSS diversion",
-      "y" = "Mortality risk for individuals using diverted PSS"
+      "y" = "Mortality risk for individuals\nusing diverted PSS",
+      "x_tick_labels" = c("Base","","High"),
+      "y_tick_labels" = c("Rx-PSS", "Base", "Unreg Opioid")
     ),
     "oat_ret" = list(
       "x" = "PSS effect on OAT retention",
-      "y" = "PSS effect on mortality"
+      "y" = "PSS effect on mortality",
+      "x_tick_labels" = c("Max Benefit", "", "No Benefit"),
+      "y_tick_labels" = c("Max Benefit", "", "No Benefit")
     )
   )
 }

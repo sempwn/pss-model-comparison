@@ -21,6 +21,7 @@ Imports:
     glue,
     here,
     lubridate,
+    patchwork,
     readr,
     stats,
     stringr,

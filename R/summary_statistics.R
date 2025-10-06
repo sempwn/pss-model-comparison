@@ -13,20 +13,35 @@ prettify_uncertainty <- function(m,lc,uc, digits=2){
 
 #' summarise deaths averted
 #' @param model_data output of [load_data()]
+#' @param event Either `"deaths"` or `"overdoses"`. Default is `"deaths"`
 #' @param digits number of significant digits
 #' @return [dplyr::tibble()]
 #' @export
-summarise_deaths_averted <- function(model_data, digits = 2){
-  m <- lc <- uc <- NULL
-  `no PSS drug_deaths` <- `PSS drug_deaths` <- deaths_averted <- run <- NULL
+summarise_events_averted <- function(model_data, event = "deaths", digits = 2){
   model <- run <- NULL
+  col_name <- get_event_cols(event)
   model_data |>
-    dplyr::mutate(deaths_averted = `no PSS drug_deaths` - `PSS drug_deaths`) |>
+    dplyr::mutate(
+      events_averted = .data[[col_name[["counterfactual"]]]] - .data[[col_name[["baseline"]]]]
+      ) |>
     dplyr::group_by(model,run) |>
-    dplyr::summarise(deaths_averted = sum(deaths_averted)) |>
+    dplyr::summarise(events_averted = sum(events_averted)) |>
     dplyr::group_by(model) |>
-    dplyr::summarise(m = stats::median(deaths_averted),
-              lc = stats::quantile(deaths_averted,0.025),
-              uc = stats::quantile(deaths_averted, 0.975)) |>
-    dplyr::mutate(deaths_averted = prettify_uncertainty(m,lc,uc))
+    dplyr::summarise(m = stats::median(events_averted),
+              lc = stats::quantile(events_averted,0.025),
+              uc = stats::quantile(events_averted, 0.975)) |>
+    dplyr::mutate(events_averted = prettify_uncertainty(m,lc,uc))
+}
+
+#' @noRd
+get_event_cols <- function(event){
+  if(event == "deaths"){
+    baseline <- "PSS drug_deaths"
+    counterfactual <- "no PSS drug_deaths"
+  }else if(event == "overdoses"){
+    baseline <- "PSS overdoses"
+    counterfactual <- "no PSS overdoses"
+  }
+
+  list("baseline" = baseline, "counterfactual" = counterfactual)
 }

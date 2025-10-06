@@ -21,4 +21,7 @@ for(outcome in outcomes){
 }
 
 print("Total deaths averted by model: ")
-summarise_deaths_averted(model_data)
+print(summarise_events_averted(model_data, event = "deaths"))
+
+print("Total overdoses averted by model: ")
+print(summarise_events_averted(model_data, event = "overdoses"))
