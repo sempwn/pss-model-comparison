@@ -10,9 +10,10 @@
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/load_data.html</loc></url>
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/load_sensitivity_analysis_data.html</loc></url>
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/plot_deaths_averted_lines.html</loc></url>
+<url><loc>https://sempwn.github.io/pss-model-comparison/reference/plot_model_difference_heatmap.html</loc></url>
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/plot_outcome_by_quarter.html</loc></url>
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/process_twsa_data.html</loc></url>
-<url><loc>https://sempwn.github.io/pss-model-comparison/reference/summarise_deaths_averted.html</loc></url>
+<url><loc>https://sempwn.github.io/pss-model-comparison/reference/summarise_events_averted.html</loc></url>
 <url><loc>https://sempwn.github.io/pss-model-comparison/reference/twsa_heatmap_plot.html</loc></url>
 </urlset>
 
