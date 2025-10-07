@@ -22,3 +22,9 @@ for(outcome in outcomes){
               glue::glue("{outcome} model quarter comparison.pdf")))
 }
 
+year_quarter_summary <- model_data |>
+  calculate_year_quarter_data() |>
+  add_averted_columns() |>
+  summarise_year_quarter_data()
+
+print(year_quarter_summary)

@@ -22,29 +22,105 @@
 #' \dontrun{
 #' calculate_year_quarter_data(model_data)
 #' }
-calculate_year_quarter_data <- function(model_data){
+calculate_year_quarter_data <- function(model_data) {
   date <- year_quarter <- model <- run <- NULL
   model_data |>
     dplyr::filter(date > lubridate::ymd("2020-03-01")) |>
     dplyr::group_by(year_quarter, model, run) |>
     dplyr::summarise(dplyr::across(
-      tidyselect::where(~ !lubridate::is.Date(.x)),sum)) |>
+      tidyselect::where(~ !lubridate::is.Date(.x)), sum
+    )) |>
     dplyr::mutate(year_quarter = forcats::as_factor(year_quarter))
+}
+
+#' Summarize model outputs by year and quarter
+#'
+#' Aggregates quarterly model results (such as overdoses and deaths) across
+#' simulations or parameter draws using the median and associated uncertainty
+#' interval. This summary provides a concise quarterly view of modeled outcomes
+#' from the output of [calculate_year_quarter_data()].
+#'
+#' The function groups results by `year_quarter` and `model`, applies
+#' [median_with_uncertainty()] to all numeric columns, and returns a subset
+#' of key outcome variables for reporting or visualization.
+#'
+#' @param year_quarter_data A data frame or tibble returned by
+#'   [calculate_year_quarter_data()], containing simulated quarterly outcomes
+#'   with columns such as `year_quarter`, `model`, `PSS overdoses`,
+#'   `no PSS overdoses`, `PSS drug_deaths`, `no PSS drug_deaths`,
+#'   and cumulative measures of deaths and overdoses averted.
+#'
+#' @return A tibble summarizing median (and uncertainty) estimates for each
+#'   model and year-quarter combination. Includes the following columns:
+#'   \describe{
+#'     \item{year_quarter}{Year-quarter identifier (e.g., `"2024-Q2"`).}
+#'     \item{model}{Model name or identifier (e.g., `"BCROM"`, `"OTEM"`).}
+#'     \item{PSS overdoses}{Median and uncertainty interval for overdoses
+#'     under the PSS scenario.}
+#'     \item{no PSS overdoses}{Median and uncertainty interval for overdoses
+#'     under the counterfactual (no PSS) scenario.}
+#'     \item{PSS drug_deaths}{Median and uncertainty interval for overdose
+#'     deaths under the PSS scenario.}
+#'     \item{no PSS drug_deaths}{Median and uncertainty interval for overdose
+#'     deaths under the counterfactual (no PSS) scenario.}
+#'     \item{cumulative deaths averted}{Cumulative estimate of overdose deaths
+#'     averted by PSS implementation.}
+#'     \item{cumulative overdoses averted}{Cumulative estimate of overdoses
+#'     averted by PSS implementation.}
+#'   }
+#'
+#' @details
+#' The function assumes that numeric columns represent simulation outputs for
+#' each quarter and model combination. The summarization step uses
+#' [median_with_uncertainty()] to generate median and interval summaries,
+#' typically returning formatted values such as `"123 (100–150)"`.
+#'
+#' @seealso [calculate_year_quarter_data()], [median_with_uncertainty()]
+#'
+#' @importFrom dplyr group_by summarise across where select
+#'
+#' @return A tibble with summarized quarterly model results.
+#' @export
+summarise_year_quarter_data <- function(year_quarter_data) {
+  year_quarter <- model <- NULL
+  `cumulative deaths averted` <- `cumulative overdoses averted` <- NULL
+  `no PSS drug_deaths` <- `PSS drug_deaths` <- NULL
+  `no PSS overdoses` <- `PSS overdoses` <- NULL
+  year_quarter_data |>
+    dplyr::group_by(year_quarter, model) |>
+    dplyr::summarise(
+      dplyr::across(
+        dplyr::where(is.numeric), median_with_uncertainty
+      )
+    ) |>
+    dplyr::select(
+      year_quarter, model, `PSS overdoses`, `no PSS overdoses`,
+      `no PSS drug_deaths`, `PSS drug_deaths`,
+      `cumulative deaths averted`, `cumulative overdoses averted`
+    )
+}
+
+#' @noRd
+median_with_uncertainty <- function(x) {
+  m <- median(x)
+  lc <- quantile(x, 0.05)
+  uc <- quantile(x, 0.95)
+  prettify_uncertainty(m, lc, uc)
 }
 
 #' calculate deaths and overdoses averted
 #' @inheritParams calculate_year_quarter_data
 #' @return tibble
 #' @export
-add_averted_columns <- function(model_data){
+add_averted_columns <- function(model_data) {
   model <- run <- `deaths averted` <- `overdoses averted` <- NULL
   `no PSS drug_deaths` <- `PSS drug_deaths` <- `no PSS overdoses` <- `PSS overdoses` <- NULL
   model_data |>
-    dplyr::group_by(model,run) |>
+    dplyr::group_by(model, run) |>
     dplyr::mutate(
       `cumulative deaths averted` = cumsum(`no PSS drug_deaths` - `PSS drug_deaths`),
       `cumulative overdoses averted` = cumsum(`no PSS overdoses` - `PSS overdoses`)
-      )
+    )
 }
 
 #' Scale a column between -1 and 1 and rename it
@@ -77,7 +153,7 @@ scale_and_rename_columns <- function(dataframe, col, new_col, digits = 3) {
     warning("Column '", col, "' has constant values. Returning zeros.")
     dataframe[[new_col]] <- 0
   } else {
-    dataframe[[new_col]] <- round(2 * (x - rng[1]) / (rng[2] - rng[1]) - 1, digits=digits)
+    dataframe[[new_col]] <- round(2 * (x - rng[1]) / (rng[2] - rng[1]) - 1, digits = digits)
   }
 
   return(dataframe)
