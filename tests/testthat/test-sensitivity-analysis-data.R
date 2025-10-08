@@ -3,7 +3,7 @@ test_that("get_sensitivity_data_labels returns correct structure", {
   expect_type(labels, "list")
   expect_named(labels, c("pop_mort", "oat_ret"))
 
-  expect_named(labels$pop_mort, c("x", "y"))
+  expect_named(labels$pop_mort, c("x", "y", "x_tick_labels", "y_tick_labels"))
   expect_type(labels$pop_mort$x, "character")
   expect_type(labels$pop_mort$y, "character")
 })
@@ -37,7 +37,7 @@ test_that("load_sensitivity_analysis_data returns expected structure", {
   expect_named(result,c("pop_mort","oat_ret"))
   for(s in names(result)){
     scenario <- result[[s]]
-    expect_named(scenario, c("data","x_label","y_label"))
+    expect_named(scenario, c("data","x_label","y_label", "x_tick_labels", "y_tick_labels"))
     expect_s3_class(scenario$data, "tbl_df")
     expect_true(all(c("x_scale","y_scale","total_deaths","model") %in% names(scenario$data)))
     expect_type(scenario$x_label, "character")

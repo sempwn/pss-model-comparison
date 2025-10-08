@@ -5,7 +5,7 @@ library(withr)
 
 test_that("summarise_year_quarter_data returns correct structure", {
   # Mock median_with_uncertainty
-  local_mock(
+  local_mocked_bindings(
     median_with_uncertainty = function(x) median(x, na.rm = TRUE)
   )
 
@@ -32,7 +32,7 @@ test_that("summarise_year_quarter_data returns correct structure", {
 })
 
 test_that("summarise_year_quarter_data summarizes correctly", {
-  local_mock(
+  local_mocked_bindings(
     median_with_uncertainty = function(x) round(median(x), 1)
   )
 
@@ -56,7 +56,7 @@ test_that("summarise_year_quarter_data summarizes correctly", {
 })
 
 test_that("summarise_year_quarter_data handles NA values", {
-  local_mock(
+  local_mocked_bindings(
     median_with_uncertainty = function(x) median(x, na.rm = TRUE)
   )
 
