@@ -29,8 +29,10 @@ test_that("plot_model_difference_heatmap() returns a ggplot object", {
   # Mock sensitivity analysis data
   data <- expand.grid(
     x_scale = -1:1, y_scale = -1:1,
-    model = c("otem", "bcrom"), total_deaths = 1
+    model = c("otem", "bcrom")
     )
+  set.seed(123)
+  data["total_deaths"] <- rpois(18,lambda=100)
 
   result <- list(
     oat_ret = list(
@@ -38,7 +40,8 @@ test_that("plot_model_difference_heatmap() returns a ggplot object", {
       x_label = "Parameter A",
       y_label = "Parameter B",
       x_tick_labels = c("Low", "Med", "High"),
-      y_tick_labels = c("Low", "Med", "High")
+      y_tick_labels = c("Low", "Med", "High"),
+      baseline = c(0,0)
     )
   )
 
