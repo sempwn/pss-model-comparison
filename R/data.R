@@ -30,9 +30,9 @@
 #' }
 #'
 #' @export
-load_data <- function(round="one"){
+load_data <- function(round = "one") {
   `...1` <- NULL
-  round_label <- paste0("round_",round)
+  round_label <- paste0("round_", round)
 
   bcrom_data <- DATASET[[round_label]][["bcrom"]]
   otem_data <- DATASET[[round_label]][["otem"]]
@@ -45,8 +45,10 @@ load_data <- function(round="one"){
   all_data <- bcrom_data |>
     dplyr::bind_rows(otem_data)
   all_data <- all_data |>
-    dplyr::mutate(date = lubridate::ymd(glue::glue("{year}-{month}-01")),
-                  year_quarter = lubridate::quarter(date, type = "year_start/end"))
+    dplyr::mutate(
+      date = lubridate::ymd(glue::glue("{year}-{month}-01")),
+      year_quarter = lubridate::quarter(date, type = "year_start/end")
+    )
   return(all_data)
 }
 
@@ -71,25 +73,24 @@ load_data <- function(round="one"){
 #'   The list is keyed by scenario identifiers (e.g., `"pop_mort"`, `"oat_ret"`).
 #'
 #' @export
-load_sensitivity_analysis_data <- function(){
+load_sensitivity_analysis_data <- function() {
   labels <- get_sensitivity_data_labels()
   otem_data <- load_otem_sensitivity_analysis_data()
   bcrom_data <- load_bcrom_sensitivity_analysis_data()
   combined_data <- list()
-  for(d in names(otem_data)){
+  for (d in names(otem_data)) {
     otem_data[[d]] <- dplyr::rename(
       otem_data[[d]],
       "total_deaths" = "n_inc_odf_scaled"
     )
-    if(!(d %in% names(bcrom_data))){
+    if (!(d %in% names(bcrom_data))) {
       stop("bcrom and otem sensitivity data tables must match")
     }
-    combined_data[[d]] <- list(
-      data = combine_sensitivity_data(otem_data[[d]],bcrom_data[[d]]),
-      x_label = labels[[d]][['x']],
-      y_label = labels[[d]][['y']],
-      x_tick_labels = labels[[d]][['x_tick_labels']],
-      y_tick_labels = labels[[d]][['y_tick_labels']]
+    combined_data[[d]] <- c(
+      list(
+        data = combine_sensitivity_data(otem_data[[d]], bcrom_data[[d]])
+      ),
+      labels[[d]]
     )
   }
 
@@ -111,14 +112,16 @@ load_sensitivity_analysis_data <- function(){
 #'   columns `x_scale`, `y_scale`, `total_deaths`, and `model`.
 #'
 #' @noRd
-combine_sensitivity_data <- function(otem_data,bcrom_data){
+combine_sensitivity_data <- function(otem_data, bcrom_data) {
   model <- NULL
-  otem_data <- otem_data |> dplyr::select("x_scale","y_scale","total_deaths") |>
+  otem_data <- otem_data |>
+    dplyr::select("x_scale", "y_scale", "total_deaths") |>
     dplyr::mutate(model = "otem")
-  bcrom_data <- bcrom_data |> dplyr::select("x_scale","y_scale","total_deaths") |>
+  bcrom_data <- bcrom_data |>
+    dplyr::select("x_scale", "y_scale", "total_deaths") |>
     dplyr::mutate(model = "bcrom")
 
-  dplyr::bind_rows(otem_data,bcrom_data)
+  dplyr::bind_rows(otem_data, bcrom_data)
 }
 
 #' Sensitivity data axis labels
@@ -134,19 +137,21 @@ combine_sensitivity_data <- function(otem_data,bcrom_data){
 #'   }
 #'
 #' @noRd
-get_sensitivity_data_labels <- function(){
+get_sensitivity_data_labels <- function() {
   list(
     "pop_mort" = list(
-      "x" = "Incident OUD cases resulting from PSS diversion",
-      "y" = "Mortality risk for individuals\nusing diverted PSS",
-      "x_tick_labels" = c("Base","","High"),
-      "y_tick_labels" = c("Rx-PSS", "Base", "Unreg Opioid")
+      "x_label" = "Incident OUD cases resulting from PSS diversion",
+      "y_label" = "Mortality risk for individuals\nusing diverted PSS",
+      "x_tick_labels" = c("Base", "", "High"),
+      "y_tick_labels" = c("Rx-PSS", "Base", "Unreg Opioid"),
+      "baseline" = c(-1, 0)
     ),
     "oat_ret" = list(
-      "x" = "PSS effect on OAT retention",
-      "y" = "PSS effect on mortality",
+      "x_label" = "PSS effect on OAT retention",
+      "y_label" = "PSS effect on mortality",
       "x_tick_labels" = c("Max Benefit", "", "No Benefit"),
-      "y_tick_labels" = c("Max Benefit", "", "No Benefit")
+      "y_tick_labels" = c("Max Benefit", "", "No Benefit"),
+      "baseline" = c(0, 0)
     )
   )
 }
@@ -168,7 +173,7 @@ get_sensitivity_data_labels <- function(){
 #'
 #' @importFrom here here
 #' @noRd
-load_otem_sensitivity_analysis_data <- function(){
+load_otem_sensitivity_analysis_data <- function() {
   df_twsa_div_pop_mort <- DATASET[["sensitivity"]][["otem"]][["pop_mort"]]
   df_twsa_pss_mort_oat_ret <- DATASET[["sensitivity"]][["otem"]][["oat_ret"]]
 
@@ -200,17 +205,29 @@ load_otem_sensitivity_analysis_data <- function(){
 #'
 #' @importFrom here here
 #' @noRd
-load_bcrom_sensitivity_analysis_data <- function(){
+load_bcrom_sensitivity_analysis_data <- function() {
+  run <- `no PSS drug_deaths` <- `PSS drug_deaths` <- NULL
+  deaths_averted <- total_deaths <- NULL
   pop_mort <- DATASET[["sensitivity"]][["bcrom"]][["pop_mort"]]
   oat_ret <- DATASET[["sensitivity"]][["bcrom"]][["oat_ret"]]
 
+  mean_deaths_averted <- DATASET[["round_two"]][["bcrom"]] |>
+    dplyr::group_by(run) |>
+    dplyr::summarise(deaths_averted = sum(`no PSS drug_deaths` - `PSS drug_deaths`)) |>
+    dplyr:: ungroup() |>
+    dplyr::summarise(deaths_averted = mean(deaths_averted)) |>
+    dplyr::pull()
+
+  # this sensitivity analysis was run as difference between base scenario and
+  # sensitivity scenario so need to minus the baseline deaths averted
   pop_mort <- pop_mort |>
-    scale_and_rename_columns("oud_incidence","x_scale") |>
-    scale_and_rename_columns("diversion_mortality_ratio","y_scale")
+    scale_and_rename_columns("oud_incidence", "x_scale") |>
+    scale_and_rename_columns("diversion_mortality_ratio", "y_scale") |>
+    dplyr::mutate(total_deaths = total_deaths - mean_deaths_averted)
 
   oat_ret <- oat_ret |>
-    scale_and_rename_columns("retention_rate","x_scale") |>
-    scale_and_rename_columns("mortality_ratio","y_scale")
+    scale_and_rename_columns("retention_rate", "x_scale", reverse = TRUE) |>
+    scale_and_rename_columns("mortality_ratio", "y_scale")
 
   return(list(
     "pop_mort" = pop_mort,

@@ -4,7 +4,11 @@
 \alias{plot_model_difference_heatmap}
 \title{Plot Model Difference Heatmap}
 \usage{
-plot_model_difference_heatmap(result, sensitivity_analysis = "oat_ret")
+plot_model_difference_heatmap(
+  result,
+  sensitivity_analysis = "oat_ret",
+  breaks = NULL
+)
 }
 \arguments{
 \item{result}{A list containing OAT results with \code{x_label}, \code{y_label},
@@ -13,11 +17,14 @@ plot_model_difference_heatmap(result, sensitivity_analysis = "oat_ret")
 \item{sensitivity_analysis}{Optional name of the element within \code{result} containing OAT results.
 Can be either \code{"pop_mort"} or \code{"oat_ret"}
 Defaults to \code{"oat_ret"}.}
+
+\item{breaks}{vector of length 4 to define small, medium, and large
+categories, default is \code{NULL}}
 }
 \value{
 A patchwork object combining the main heatmap and custom legend.
 }
 \description{
 Creates a bivariate heatmap comparing the difference in total deaths between
-two models ("OTEM" and "BCROM"), including a custom legend laid out as a 3×3 grid.
+two models ("OTEM" and "BCROM"), including a custom legend laid out as a 3x3 grid.
 }
