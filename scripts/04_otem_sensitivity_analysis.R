@@ -5,9 +5,9 @@ library(here)
 library(pss.model.comparison)
 
 # Load data
-load(file = here("data/raw/round_two/sensitivity_analysis",
+load(file = here("data-raw/round_two/sensitivity_analysis",
                  "incremental_twsa_div_pop_mort.RData"))
-load(file = here("data/raw/round_two/sensitivity_analysis",
+load(file = here("data-raw/round_two/sensitivity_analysis",
                  "incremental_twsa_pss_mort_oat_ret.RData"))
 
 # Extract OUD incidence numbers for labels (individuals and person-months)

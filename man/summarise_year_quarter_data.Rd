@@ -43,14 +43,9 @@ from the output of \code{\link[=calculate_year_quarter_data]{calculate_year_quar
 }
 \details{
 The function groups results by \code{year_quarter} and \code{model}, applies
-\code{\link[=median_with_uncertainty]{median_with_uncertainty()}} to all numeric columns, and returns a subset
+median with uncertainty to each column, and returns a subset
 of key outcome variables for reporting or visualization.
-
-The function assumes that numeric columns represent simulation outputs for
-each quarter and model combination. The summarization step uses
-\code{\link[=median_with_uncertainty]{median_with_uncertainty()}} to generate median and interval summaries,
-typically returning formatted values such as \code{"123 (100–150)"}.
 }
 \seealso{
-\code{\link[=calculate_year_quarter_data]{calculate_year_quarter_data()}}, \code{\link[=median_with_uncertainty]{median_with_uncertainty()}}
+\code{\link[=calculate_year_quarter_data]{calculate_year_quarter_data()}}
 }

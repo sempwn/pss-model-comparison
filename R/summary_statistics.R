@@ -19,6 +19,7 @@ prettify_uncertainty <- function(m,lc,uc, digits=2){
 #' @export
 summarise_events_averted <- function(model_data, event = "deaths", digits = 2){
   model <- run <- NULL
+  .data <- events_averted <- m <- lc <- uc <- NULL
   col_name <- get_event_cols(event)
   model_data |>
     dplyr::mutate(

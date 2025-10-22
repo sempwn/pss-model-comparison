@@ -27,7 +27,3 @@ The function ensures that both OTEM and BCROM provide matching sensitivity
 data tables for each scenario. It attaches appropriate x and y axis labels
 to each dataset for downstream use in figures or reports.
 }
-\seealso{
-\code{\link[=combine_sensitivity_data]{combine_sensitivity_data()}}, \code{\link[=load_otem_sensitivity_analysis_data]{load_otem_sensitivity_analysis_data()}},
-\code{\link[=load_bcrom_sensitivity_analysis_data]{load_bcrom_sensitivity_analysis_data()}}, \code{\link[=get_sensitivity_data_labels]{get_sensitivity_data_labels()}}
-}

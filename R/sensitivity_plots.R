@@ -49,6 +49,8 @@ extract_oat <- function(result, sensitivity_analysis) {
 
 #' @noRd
 prepare_heatmap_data <- function(data) {
+  model <- total_deaths <- x_scale <- y_scale <- baseline <- adj_total <- NULL
+  otem <- bcrom <- NULL
   data |>
     dplyr::group_by(model) |>
     dplyr::mutate(
@@ -62,7 +64,9 @@ prepare_heatmap_data <- function(data) {
 }
 
 #' @noRd
+#' @importFrom stats quantile
 categorize_difference <- function(df) {
+  magnitude <- y_scale <- x_scale <- x_index <- y_index <- NULL
   df |>
     dplyr::mutate(
       sign = ifelse(diff >= 0, "OTEM>BCROM", "BCROM>OTEM"),
@@ -101,6 +105,7 @@ define_palette <- function() {
 
 #' @noRd
 create_main_plot <- function(df, palette, x_label, y_label, x_ticks, y_ticks) {
+  x_scale <- y_scale <- category <- label_text <- NULL
   ggplot2::ggplot(df, ggplot2::aes(x = x_scale, y = y_scale, fill = category)) +
     ggplot2::geom_tile(color = "white") +
     ggplot2::geom_text(ggplot2::aes(label = label_text), size = 3) +
@@ -113,6 +118,7 @@ create_main_plot <- function(df, palette, x_label, y_label, x_ticks, y_ticks) {
 
 #' @noRd
 create_legend_plot <- function(palette) {
+  mag_bin <- sign_label <- category <- NULL
   legend_df <- expand.grid(
     mag_bin = c("small", "medium", "large"),
     sign = c("OTEM>BCROM", "BCROM>OTEM")

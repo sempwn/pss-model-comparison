@@ -41,7 +41,7 @@ calculate_year_quarter_data <- function(model_data) {
 #' from the output of [calculate_year_quarter_data()].
 #'
 #' The function groups results by `year_quarter` and `model`, applies
-#' [median_with_uncertainty()] to all numeric columns, and returns a subset
+#' median with uncertainty to each column, and returns a subset
 #' of key outcome variables for reporting or visualization.
 #'
 #' @param year_quarter_data A data frame or tibble returned by
@@ -69,13 +69,8 @@ calculate_year_quarter_data <- function(model_data) {
 #'     averted by PSS implementation.}
 #'   }
 #'
-#' @details
-#' The function assumes that numeric columns represent simulation outputs for
-#' each quarter and model combination. The summarization step uses
-#' [median_with_uncertainty()] to generate median and interval summaries,
-#' typically returning formatted values such as `"123 (100–150)"`.
 #'
-#' @seealso [calculate_year_quarter_data()], [median_with_uncertainty()]
+#' @seealso [calculate_year_quarter_data()]
 #'
 #' @importFrom dplyr group_by summarise across where select
 #'
@@ -101,6 +96,8 @@ summarise_year_quarter_data <- function(year_quarter_data) {
 }
 
 #' @noRd
+#' @importFrom stats median
+#' @importFrom stats quantile
 median_with_uncertainty <- function(x) {
   m <- median(x)
   lc <- quantile(x, 0.05)

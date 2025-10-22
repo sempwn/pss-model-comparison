@@ -32,12 +32,10 @@
 #' @export
 load_data <- function(round="one"){
   `...1` <- NULL
-  bcrom_data_file <- here("data","raw",paste0("round_",round),
-                                "BCROM_comparison_outputs.csv")
-  otem_data_file <- here("data","raw",paste0("round_",round),
-                               "OTEM_comparison_outputs.csv")
-  bcrom_data <- readr::read_csv(bcrom_data_file)
-  otem_data <- readr::read_csv(otem_data_file)
+  round_label <- paste0("round_",round)
+
+  bcrom_data <- DATASET[[round_label]][["bcrom"]]
+  otem_data <- DATASET[[round_label]][["otem"]]
 
   bcrom_data <- bcrom_data |>
     dplyr::mutate(model = "bcrom") |>
@@ -71,9 +69,6 @@ load_data <- function(round="one"){
 #'     \item{y_label}{A character string describing the y-axis label for the scenario.}
 #'   }
 #'   The list is keyed by scenario identifiers (e.g., `"pop_mort"`, `"oat_ret"`).
-#'
-#' @seealso [combine_sensitivity_data()], [load_otem_sensitivity_analysis_data()],
-#'   [load_bcrom_sensitivity_analysis_data()], [get_sensitivity_data_labels()]
 #'
 #' @export
 load_sensitivity_analysis_data <- function(){
@@ -174,14 +169,12 @@ get_sensitivity_data_labels <- function(){
 #' @importFrom here here
 #' @noRd
 load_otem_sensitivity_analysis_data <- function(){
-  df_twsa_div_pop_mort <- get(load(file = here("data/raw/round_two/sensitivity_analysis",
-                   "incremental_twsa_div_pop_mort.RData")))
-  df_twsa_pss_mort_oat_ret <- get(load(file = here("data/raw/round_two/sensitivity_analysis",
-                   "incremental_twsa_pss_mort_oat_ret.RData")))
+  df_twsa_div_pop_mort <- DATASET[["sensitivity"]][["otem"]][["pop_mort"]]
+  df_twsa_pss_mort_oat_ret <- DATASET[["sensitivity"]][["otem"]][["oat_ret"]]
 
   # Process outputs from TWSA analysis and add labels
-  df_twsa_div_pop_mort <- process_twsa_data(df_incremental_twsa_div_pop_mort)
-  df_twsa_pss_mort_oat_ret <- process_twsa_data(df_incremental_twsa_pss_mort_oat_ret)
+  df_twsa_div_pop_mort <- process_twsa_data(df_twsa_div_pop_mort)
+  df_twsa_pss_mort_oat_ret <- process_twsa_data(df_twsa_pss_mort_oat_ret)
 
   return(list(
     "pop_mort" = df_twsa_div_pop_mort,
@@ -208,10 +201,8 @@ load_otem_sensitivity_analysis_data <- function(){
 #' @importFrom here here
 #' @noRd
 load_bcrom_sensitivity_analysis_data <- function(){
-  pop_mort <- readr::read_csv(here("data","raw","round_two","sensitivity_analysis",
-                                   "BCROM_sensitivity_diversion_deaths.csv"))
-  oat_ret <- readr::read_csv(here("data","raw","round_two","sensitivity_analysis",
-                                   "BCROM_sensitivity_retention_deaths.csv"))
+  pop_mort <- DATASET[["sensitivity"]][["bcrom"]][["pop_mort"]]
+  oat_ret <- DATASET[["sensitivity"]][["bcrom"]][["oat_ret"]]
 
   pop_mort <- pop_mort |>
     scale_and_rename_columns("oud_incidence","x_scale") |>
