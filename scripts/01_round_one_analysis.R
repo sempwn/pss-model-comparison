@@ -28,3 +28,9 @@ year_quarter_summary <- model_data |>
   summarise_year_quarter_data()
 
 print(year_quarter_summary)
+
+print("Total deaths averted by model: ")
+print(summarise_events_averted(model_data, event = "deaths"))
+
+print("Total overdoses averted by model: ")
+print(summarise_events_averted(model_data, event = "overdoses"))

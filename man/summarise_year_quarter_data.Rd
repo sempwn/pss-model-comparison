@@ -4,7 +4,7 @@
 \alias{summarise_year_quarter_data}
 \title{Summarize model outputs by year and quarter}
 \usage{
-summarise_year_quarter_data(year_quarter_data)
+summarise_year_quarter_data(year_quarter_data, digits = 3)
 }
 \arguments{
 \item{year_quarter_data}{A data frame or tibble returned by

@@ -6,7 +6,7 @@ library(withr)
 test_that("summarise_year_quarter_data returns correct structure", {
   # Mock median_with_uncertainty
   local_mocked_bindings(
-    median_with_uncertainty = function(x) median(x, na.rm = TRUE)
+    median_with_uncertainty = function(x, digits = NULL) median(x, na.rm = TRUE)
   )
 
   input <- tibble(
@@ -33,7 +33,7 @@ test_that("summarise_year_quarter_data returns correct structure", {
 
 test_that("summarise_year_quarter_data summarizes correctly", {
   local_mocked_bindings(
-    median_with_uncertainty = function(x) round(median(x), 1)
+    median_with_uncertainty = function(x, digits = NULL) round(median(x), 1)
   )
 
   input <- tibble(
@@ -57,7 +57,7 @@ test_that("summarise_year_quarter_data summarizes correctly", {
 
 test_that("summarise_year_quarter_data handles NA values", {
   local_mocked_bindings(
-    median_with_uncertainty = function(x) median(x, na.rm = TRUE)
+    median_with_uncertainty = function(x, digits = NULL) median(x, na.rm = TRUE)
   )
 
   input <- tibble(

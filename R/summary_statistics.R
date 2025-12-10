@@ -31,7 +31,7 @@ summarise_events_averted <- function(model_data, event = "deaths", digits = 2){
     dplyr::summarise(m = stats::median(events_averted),
               lc = stats::quantile(events_averted,0.025),
               uc = stats::quantile(events_averted, 0.975)) |>
-    dplyr::mutate(events_averted = prettify_uncertainty(m,lc,uc))
+    dplyr::mutate(events_averted = prettify_uncertainty(m,lc,uc, digits = digits))
 }
 
 #' @noRd

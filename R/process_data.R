@@ -76,7 +76,7 @@ calculate_year_quarter_data <- function(model_data) {
 #'
 #' @return A tibble with summarized quarterly model results.
 #' @export
-summarise_year_quarter_data <- function(year_quarter_data) {
+summarise_year_quarter_data <- function(year_quarter_data, digits = 3) {
   year_quarter <- model <- NULL
   `cumulative deaths averted` <- `cumulative overdoses averted` <- NULL
   `no PSS drug_deaths` <- `PSS drug_deaths` <- NULL
@@ -85,7 +85,7 @@ summarise_year_quarter_data <- function(year_quarter_data) {
     dplyr::group_by(year_quarter, model) |>
     dplyr::summarise(
       dplyr::across(
-        dplyr::where(is.numeric), median_with_uncertainty
+        dplyr::where(is.numeric), ~median_with_uncertainty(.,digits = digits)
       )
     ) |>
     dplyr::select(
@@ -96,13 +96,14 @@ summarise_year_quarter_data <- function(year_quarter_data) {
 }
 
 #' @noRd
+#' @param digits number of significant figures
 #' @importFrom stats median
 #' @importFrom stats quantile
-median_with_uncertainty <- function(x) {
+median_with_uncertainty <- function(x, digits = 3) {
   m <- median(x)
   lc <- quantile(x, 0.05)
   uc <- quantile(x, 0.95)
-  prettify_uncertainty(m, lc, uc)
+  prettify_uncertainty(m, lc, uc, digits = digits)
 }
 
 #' calculate deaths and overdoses averted
@@ -138,7 +139,7 @@ add_averted_columns <- function(model_data) {
 #'
 #' @noRd
 scale_and_rename_columns <- function(dataframe, col, new_col, reverse = F,
-                                     digits = 3) {
+                                     digits = 4) {
   if (!col %in% names(dataframe)) {
     stop("Column '", col, "' not found in dataframe.")
   }
