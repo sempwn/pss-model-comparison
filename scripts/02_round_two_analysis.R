@@ -3,21 +3,42 @@ library(dplyr)
 library(ggplot2)
 library(pss.model.comparison)
 
-outcomes <- c(
-  "PSS drug_deaths", "no PSS overdoses",
-  "no PSS drug_deaths", "PSS overdoses",
-  "cumulative deaths averted", "cumulative overdoses averted")
+# relabel outcomes for plotting
+relabel_outcomes <- c(
+  "Baseline deaths" = "PSS drug_deaths",
+  "Counterfactual deaths" = "no PSS drug_deaths",
+  "Baseline drug poisoning events" = "PSS overdoses",
+  "Counterfactual drug poisoning events" = "no PSS overdoses",
+  "Cumulative deaths averted" = "cumulative deaths averted",
+  "Cumulative drug poisoning\n events averted" = "cumulative overdoses averted"
+)
+
+outcomes <- names(relabel_outcomes)
 
 model_data <- load_data(round = "two")
 
 # outcomes by quarter
 plot_data <- calculate_year_quarter_data(model_data) |>
-  add_averted_columns()
-for(outcome in outcomes){
-  g <- plot_outcome_by_quarter(plot_data,outcome = outcome)
+  add_averted_columns() |>
+  rename(!!!relabel_outcomes)
+for (outcome in outcomes) {
+  if (outcome == "Cumulative drug poisoning\n events averted") {
+    legend_position <- c(0.2, 0.9)
+  } else {
+    legend_position <- "none"
+  }
+
+  g <- plot_outcome_by_quarter(plot_data, outcome = outcome, legend_position = legend_position)
   show(g)
-  ggsave(here("results","round_two",
-              glue::glue("{outcome} model quarter comparison.png")))
+  outcome_file_label <- path_sanitize(outcome)
+  ggsave(here(
+    "results", "round_two",
+    glue::glue("{outcome_file_label} model quarter comparison.png")
+  ))
+  ggsave(here(
+    "results", "round_two",
+    glue::glue("{outcome_file_label} model quarter comparison.pdf")
+  ))
 }
 
 year_quarter_summary <- model_data |>

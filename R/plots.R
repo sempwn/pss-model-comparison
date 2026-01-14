@@ -10,6 +10,7 @@
 #'   the model group.
 #' @param outcome A character string specifying the name of the outcome column
 #'   in `plot_data` to be plotted. Defaults to `"PSS drug_deaths"`.
+#' @param legend_position Defaults to `"none"`.
 #'
 #' @return A `ggplot2` object representing the boxplot of the specified outcome
 #'   by `year_quarter` and `model`.
@@ -27,7 +28,8 @@
 #' @importFrom ggplot2 ggplot aes geom_boxplot theme_classic
 #' @importFrom stringr str_replace_all
 #' @export
-plot_outcome_by_quarter <- function(plot_data, outcome = "PSS drug_deaths") {
+plot_outcome_by_quarter <- function(plot_data, outcome = "PSS drug_deaths",
+                                    legend_position = "none") {
   year_quarter <- model <- .data <- NULL
   outcome_label <- stringr::str_replace_all(outcome, "_", " ")
   g <- plot_data |>
@@ -37,7 +39,9 @@ plot_outcome_by_quarter <- function(plot_data, outcome = "PSS drug_deaths") {
     )) +
     ggplot2::geom_boxplot() +
     ggplot2::theme_classic() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                   legend.position = legend_position) +
+    ggplot2::labs(fill = "")
 
   return(g)
 }
