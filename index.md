@@ -8,6 +8,7 @@ You can install the development version of pss.model.comparison from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("sempwn/pss-model-comparison")
 ```
@@ -17,6 +18,7 @@ pak::pak("sempwn/pss-model-comparison")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
+
 library(pss.model.comparison)
 ## basic example code
 ```
@@ -25,6 +27,7 @@ What is special about using `README.Rmd` instead of just `README.md`?
 You can include R chunks like so:
 
 ``` r
+
 summary(cars)
 #>      speed           dist       
 #>  Min.   : 4.0   Min.   :  2.00  
