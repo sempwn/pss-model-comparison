@@ -108,3 +108,12 @@ plot_deaths_averted_lines <- function(model_data) {
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::guides(colour = ggplot2::guide_legend(override.aes = list(alpha = 1)))
 }
+
+#' Remove any special characters from a string
+#' @export
+#' @param x string
+#' @return string
+path_sanitize <- function(x) {
+  stopifnot(is.character(x), length(x) == 1)
+  gsub("[\r\n]", "", x)
+}
